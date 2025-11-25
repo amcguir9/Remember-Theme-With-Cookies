@@ -1,6 +1,8 @@
 <?php
 // 1. If the form was submitted, read the POST data and set the cookie
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+$nickname = $_POST["nickname"] ?? "";
+setcookie("nickname", $nickname, time() + 60*60*24*7);
 $chosenTheme = $_POST["theme"] ?? "epcc";
 
 setcookie("theme", $chosenTheme, time() + 60*60*24*7);
@@ -12,6 +14,7 @@ setcookie("theme", $chosenTheme, time() + 60*60*24*7);
   // 2. If no form submitted, read the cookie or use "epcc"
   $theme = $_COOKIE["theme"] ?? "epcc";
 }
+$nickname = $_COOKIE["nickname"] ?? "";
 
 // 3. Decide which CSS class to use for the <body>
 $bodyClass = ($theme == "thanksgiving") ? "thanksgiving" : "epcc";
@@ -25,6 +28,10 @@ $bodyClass = ($theme == "thanksgiving") ? "thanksgiving" : "epcc";
 </head>
 <body class="<?php echo $bodyClass; ?>">
   <h1>Remember My Theme</h1>
+  
+<?php if ($nickname != ""): ?>
+  <h2>Welcome back, <?php echo htmlspecialchars($nickname); ?>!</h2>
+<?php endif; ?>
 
   <p>Current theme: <?php echo $theme; ?></p>
 
@@ -40,6 +47,9 @@ $bodyClass = ($theme == "thanksgiving") ? "thanksgiving" : "epcc";
       <input type="radio" name="theme" value="thanksgiving">
       Thanksgiving Night
     </label>
+
+<br><br>
+<input type="text" name="nickname" placeholder="Your nickname">
 
     <br><br>
     <button type="submit">Save my theme</button>
